@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
+    <title></title>
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/bootstrapLunbo.css"/>
+    <link rel="stylesheet" href="css/font-awesome/css/font-awesome.css"/>
+
+    <style>
+        *{
+            margin:0;
+            padding: 0;
+            font-size: 13px;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            color: #AFAFAF;
+        }
+        a{
+            text-decoration: none !important;
+            color: #AFAFAF;
+            font-size: 13px;
+        }
+        html,body,.header,.naver,.gradeTab{
+            min-width: 1000px;
+        }
+        ul li{
+            list-style: none;
+        }
+        header{
+            height: 30px;
+            text-align: center;
+            background-color: #000000;
+        }
+        .header{
+            color: #fff;
+            text-align: center;
+        }
+        .header ul li{
+            line-height: 30px;
+        }
+        .header ul li:nth-of-type(1){
+            float: left;
+        }
+        .header ul li:nth-of-type(2){
+            float: right;
+        }
+        #placeCheck{
+            color: #AFAFAF;
+            font-size: 0.8rem;
+        }
+        #menu{
+            position: absolute;
+            top:-2px;
+            display: none;
+            z-index:10;
+        }
+        #menu div{
+           position: relative;
+            top:14px;
+            left: -77px;
+            font-size: 25px;
+            color: #ffffff;
+            border-bottom: 1px solid #fff;
+            height: 18px;
+            width: 15px;
+        }
+        #menu ul{
+            border: 1px solid #ccc;
+            background-color: #fff;
+
+            border-radius: 5px;
+            width: 200px;
+            text-align: left;
+            height: 180px;
+            padding-left: 8px;
+
+        }
+        #menu ul li{
+            margin-top: -5px;
+        }
+        #menu ul li a{
+            font-size: 13px;
+            color: #333;
+            cursor: pointer;
+        }
+        #menu ul li a:hover{
+            color: red;
+        }
+
+        #placeDir{
+            width: 150px;
+            font-size: 12px;
+        }
+
+        .maps{
+            font-size: 16px;
+        }
+        .link-btn{
+            color:#AFAFAF !important;
+        }
+        .link-btn:hover{
+            color:#fff !important;
+            cursor: pointer;
+        }
+
+        nav{
+            margin-top: 30px;
+
+        }
+
+        .naver ul li:nth-of-type(1){
+            float: left;
+        }
+        .naver ul li:nth-of-type(2){
+            float: right;
+        }
+        .logo{
+            font-size: 2.6rem;
+            color: red;
+            text-shadow: 2px 3px 3px #000;
+        }
+        .navtabs{
+            margin-left: 15px;
+        }
+        .navtabs a{
+            font-size: 15px;
+            color: #333;
+        }
+        .navtabs a:hover{
+            color:red;
+        }
+        .naver ul li .navtabs:nth-child(2) a{
+            color: red;
+        }
+
+
+
+        .searcbtn{
+            color: #ccc;
+            font-size: 13px;
+            position: relative;
+            left: -10px;
+            top:-4px;
+            cursor: pointer;
+        }
+        #searchval{
+            border-radius: 8px;
+            width: 310px;
+            height: 30px;
+            position: relative;
+            left: 15px;
+        }
+        .carousel{
+            margin-top: 15px;
+            cursor: pointer;
+            margin-bottom: 0px;
+        }
+
+        .gradeTab{
+            height: 60px;
+            width: 100%;
+            line-height: 60px;
+        }
+        .gradeName{
+            font-size: 14px;
+            color: #333;
+            margin-left: 10px;
+            padding-left: 4px;
+            padding-right: 4px;
+            padding-top: 2px;
+            padding-bottom: 2px;
+
+        }
+        .gradeName:hover{
+            color: red;
+        }
+        .gradeName:nth-child(1){
+            background-color: red;
+            color: #fff;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="app">
+        <my-header></my-header>
+        <my-nav></my-nav>
+        <my-lunbo></my-lunbo>
+        <div class="gradeTab container">
+            <span>年级</span>
+            <span>
+                <a href="#" v-for="(item,index) in gradelist" @click="gradeName(index)" class="gradeName">{{item}}</a>
+            </span>
+        </div>
+    </div>
+
+    <script src="js/vue.min.js"></script>
+    <script src="js/vuex.js"></script>
+    <script src="js/vue-resource.min.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script>
+
+      var citylist=[
+                      "北京","天津","河北","山西","内蒙古","辽宁","吉林","黑龙江","上海","江苏","浙江","安徽","福建",
+                      "江西","山东","河南","湖北","湖南","广东","广西","海南","重庆","四川","贵州","云南","西藏","陕西",
+                      "甘肃","青海","宁夏","新疆","台湾","香港","澳门","其他"
+                    ]
+      var menulist=['首页','选课中心','免费讲座','学习中心','1对1']
+      var gradelist=['大班','一年级','二年级','三年级','四年级','五年级','六年级','初一','初二','初三','高一','高二','高三']
+        new Vue({
+            el:'#app',
+            data:{
+                gradelist : gradelist
+            },
+            methods:{
+                gradeName : function(index){
+                    $('.gradeName').css({color:'#333',background:'transparent'});
+                    $('.gradeName:eq('+index+')').css({color:'#fff',background:'red'});
+                }
+            },
+            components:{
+                'my-header':{
+                    template:`
+                      <header>
+                          <div class="container header">
+                              <ul>
+                                  <li  @mouseover="placehover" @mouseleave="placemove">
+                                      <b class="icon icon-map-marker maps" ></b>
+                                      <span id="placeCheck">{{cityName}}</span>
+                                      <b class="icon icon-angle-up" id="placeDir"  @mouseover="placeDir">
+                                      [为您推荐该地区的课程]
+                                      </b>
+                                      <div id="menu">
+                                      <div class="icon icon-caret-up"></div>
+                                      <ul @mouseleave="placeModel">
+                                      <li class="cityLi">
+                                      <a v-for="(item,index) in cityList" @click="cityname(item,index)">
+                                      {{item}}
+                                      </a>
+                                      </li>
+                                      </ul>
+                                      </div>
+                                      </li>
+                                      <li>
+                                      <a href="https://zt.xueersi.com/mall/qualification/qualification_pc.html" target="_blank" class="link-btn">教师资质</a>|
+                                      <a href="//www.xueersi.com/d/" target="_blank" class="link-btn">客户端下载</a>|
+                                      <a href="//i.xueersi.com/MyCollects/" class="link-btn" >收藏夹</a>|
+                                      <a href="//ocenter.xueersi.com/MyOrders/show/" class="link-btn">我的订单</a>|
+                                      <a href="//account.xueersi.com" class="link-btn">设置</a>|
+                                      <span class="link-btn" >登录</span> <span class="link-btn" data-v-d9ea7ae6="">注册</span>|
+                                  </li>
+                              </ul>
+                          </div>
+                      </header>`,
+                        methods:{
+                          placehover:function () {
+                              $('#placeCheck').css('color', '#fff');
+                              $('#placeDir').css('color', '#fff');
+                          },
+                          placeDir:function () {
+                              $('#menu').css('display', 'block');
+                              $('#placeDir').attr('class', 'icon icon-angle-down');
+
+                          },
+                          placemove:function () {
+                              $('#menu').css('display', 'none');
+                              $('#placeDir').attr('class', 'icon icon-angle-up');
+                              $('#placeCheck').css('color', '#AFAFAF');
+                              $('#placeDir').css('color', '#AFAFAF');
+                          },
+                          placeModel:function () {
+                              $('#menu').css('display', 'none');
+                              $('#placeDir').attr('class', 'icon icon-angle-up');
+                          },
+                          cityname:function (item,index) {
+                              this.cityName = item;
+                              $('.cityLi a:eq('+index+')').siblings().css('color','#333');
+                              $('.cityLi a:eq('+index+')').css('color','red')
+                              $('#menu').css('display', 'none');
+                              $('#placeDir').attr('class', 'icon icon-angle-up');
+                          }
+                     }, data:function(){
+                      return{
+                          cityName:'北京',
+                          cityList:citylist
+                      }
+                  }
+                },
+                'my-nav':{
+                    template:`<nav>
+                                  <div class="container naver">
+                                      <ul>
+                                          <li>
+                                              <span class="logo">东东学习网</span>
+                                              <span class="navtabs"  v-for="(item, index) in menulist">
+                                                <a href="#" @click="navcheck(index)">{{item}}</a>
+                                              </span>
+                                          </li>
+                                          <li>
+                                              <input type="text" id="searchval" placeholder="搜索内容"/><b class="icon icon-search searcbtn"></b>
+                                          </li>
+                                      </ul>
+                                  </div>
+                              </nav>`,
+                      data:{
+                          menudata:menulist
+                      },
+                      methods:{
+                          navcheck:function(index){
+                              $('.navtabs a').css('color','#333');
+                              $('.navtabs:eq('+index+ ') a').css('color','red');
+
+                          }
+                      },
+                },
+                'my-lunbo':{
+                      template:` <div id="demo"  class="carousel slide" data-ride="carousel">
+                                      <!-- 轮播图片 -->
+                                      <div class="carousel-inner">
+                                          <div class="carousel-item active">
+                                            <img src="img/a.jpg">
+                                          </div>
+                                          <div class="carousel-item">
+                                            <img src="img/b.jpg">
+                                          </div>
+                                          <div class="carousel-item">
+                                            <img src="img/c.jpg">
+                                          </div>
+                                          <div class="carousel-item">
+                                            <img src="img/d.jpg">
+                                          </div>
+                                      </div>
+                                      <!-- 左右切换按钮 -->
+                                      <a class="carousel-control-prev" href="#demo" data-slide="prev">
+                                         <span class="carousel-control-prev-icon"></span>
+                                      </a>
+                                      <a class="carousel-control-next" href="#demo" data-slide="next">
+                                          <span class="carousel-control-next-icon"></span>
+                                      </a>
+                                  </div>`
+                 }
+            }
+        })
+      $('.cityLi a:eq(0)').css('color','red');
+    </script>
+</body>
+</html>
